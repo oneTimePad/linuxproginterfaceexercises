@@ -8,11 +8,16 @@
 #include <stdio.h>
 
 
-#define MAX_BUF_SIZE 1024
-
-
 typedef enum { FALSE, TRUE} _BOOL;
 
+
+/**
+* read all data from src and write all of it to dst
+* src: fd of source file
+* dst: fd of destination file
+* total_amt: total number of bytes to copy
+* returns: status
+**/
 static _BOOL readAndWriteAll(int src,int dst, size_t total_amt){
   #define MAX_BUF_SIZE 1024
 
@@ -33,6 +38,10 @@ static _BOOL readAndWriteAll(int src,int dst, size_t total_amt){
   return TRUE;
 }
 
+/**
+* print status for errno and exit
+* fct: name of function who set errno
+**/
 static void errErrnoExit(const char* fct){
   perror(fct);
   exit(EXIT_FAILURE);
@@ -46,6 +55,7 @@ int main(int argc, char* argv[]){
     exit(EXIT_FAILURE);
   }
 
+  // add a help option
   int opt;
   while((opt=getopt(argc,argv,"h"))>0){
     switch(opt){
@@ -117,7 +127,6 @@ int main(int argc, char* argv[]){
   if(current==-1){
     errErrnoExit("lseek()");
   }
-
 
 
   if(close(src)==-1){
