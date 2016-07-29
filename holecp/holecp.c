@@ -66,22 +66,6 @@ int main(int argc, char* argv[]){
     exit(EXIT_FAILURE);
   }
 
-  if(lseek(src,50,SEEK_SET)==(off_t)-1){
-    perror("lseek()");
-    exit(EXIT_FAILURE);
-  }
-
-  if(write(src,"FFF",4)==-1){
-    perror("write()");
-    exit(EXIT_FAILURE);
-  }
-
-  if(lseek(src,0,SEEK_SET)==(off_t)-1){
-    perror("lseek()");
-    exit(EXIT_FAILURE);
-  }
-
-
   int dst;
   if((dst=open(argv[2],O_CREAT | O_WRONLY, modes))==-1){
     perror("open()");
