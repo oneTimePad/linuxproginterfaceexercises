@@ -1,7 +1,7 @@
 all: exe
 
 exe: my_uio.h ../../errors.h
-	gcc -g -o 57 57.c ../../errors.c my_uio.c 
+	gcc  -o 57 57.c ../../errors.c my_uio.c -O2
 
 clean:
 	rm -rf 57
