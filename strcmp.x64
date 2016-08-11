@@ -1,0 +1,78 @@
+extern printf
+
+section .data
+  fmt db "%d",10
+
+
+section .text
+	global main
+
+main:
+  push rbp
+  sub rsp,0x128
+  xor rax,rax
+  xor rdi,rdi
+  lea rsi,[rsp]
+  mov rdx,0x128
+  syscall
+  mov BYTE [rsi+rax],0
+  xor rbx,rbx
+  mov rbx,rsi
+  xor rax,rax
+  sub rsp,0x128
+  lea rsi,[rsp]
+  syscall
+  mov BYTE [rsi+rax],0
+  mov rdi,rbx
+  call strcmp
+  mov rdi,fmt
+  mov rsi,rax
+  xor rdx,rdx
+  call printf
+  add rsp,0x128
+  add rsp,0x128
+  pop rbp
+  ret
+
+
+
+strcmp:
+  push rbp
+  mov rbp,rsp
+  push rbx
+  xor rbx,rbx
+  xor rcx,rcx
+  xor rdx,rdx
+  mov rcx,-1
+  _loop:
+    add rcx,1
+    movzx rbx, BYTE [rdi+rcx]
+    movzx rdx, BYTE [rsi+rcx]
+    test rbx,rbx
+    jz first
+    test rdx,rdx
+    jz second
+    cmp rdx,rbx
+    jg first
+    jl second
+    je _loop
+
+  first:
+    test rdx,rdx
+    jz equal
+    mov rax, 1
+    jmp end
+
+  second:
+    test rbx,rbx
+    jz equal
+    mov rax,-1
+    jmp end
+  equal:
+    xor rax,rax
+
+  end:
+    pop rbx
+    mov rsp,rbp
+    pop rbp
+    ret

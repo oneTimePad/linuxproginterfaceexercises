@@ -1,0 +1,80 @@
+section .data
+	fmt db "%c",10,0
+  null_fmt db "%s",10,0
+  null_msg db "char not found"
+extern printf
+
+section .text
+	global main
+
+main:
+	push rbp
+	xor rax,rax
+	sub rsp,0x128
+
+	xor rdi,rdi
+	mov rsi, rsp
+	mov rdx,0x128
+	syscall
+
+	mov BYTE [rsp+rax],0x0
+	mov rbx,rsp
+
+  sub rsp,0x2
+  xor rax,rax
+  mov rsi,rsp
+  mov rdx,0x2
+  syscall
+
+  movzx rsi, BYTE [rsp]
+  mov rdi, rbx
+	call strchr
+
+  test rax,rax
+  jz null
+  non_null:
+    mov rdi,fmt
+	  movzx rsi,BYTE [rax]
+	  xor rax,rax
+	  call printf
+    add rsp,0x12a
+    pop rbp
+    mov rax,0
+    ret
+
+  null:
+    mov rdi, null_fmt
+    mov rsi,null_msg
+    xor rax,rax
+    call printf
+    add rsp,0x12a
+   	pop rbp
+   	mov rax,0
+   	ret
+
+
+
+
+strchr:
+	push rbp
+	mov rbp,rsp
+	push rbx
+	xor rcx,rcx
+	_loop:
+	   movzx rbx, BYTE [rdi+rcx]
+	   test rbx,rbx
+	   jz _end
+     cmp rbx,rsi
+     je _found
+	   add rcx,1
+	   jmp _loop
+  _found:
+      lea rax, [rdi+rcx]
+      pop rbx
+      pop rbp
+      ret
+	_end:
+      mov rax,0x0
+	    pop rbx
+      pop rbp
+      ret

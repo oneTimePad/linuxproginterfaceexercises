@@ -1,0 +1,47 @@
+
+extern printf
+
+section .text
+	global main
+
+main:
+  push rbp
+  sub rsp,0x128
+	xor rdx,rdx
+  lea rdi, [rsp]
+	mov rdx, rdi
+  sub rsp, 0x128
+  lea rsi, [rsp]
+  mov rax,0x6a6b6a6b6a6b6a6b
+  xor rcx,rcx
+  mov rcx,0x25
+  rep stosq
+	mov rdi,rdx
+	xchg rsi,rdi
+	xor rdx,rdx
+	mov rdx,0x128
+  call memcpy
+  add rsp,0x128
+  add rsp,0x128
+  pop rbp
+  ret
+
+
+memcpy:
+  push rbp
+  mov rbp,rsp
+  push rbx
+	push rdx
+  mov rax,rdx
+	xor rbx,rbx
+	mov rbx, 8
+	xor rdx,rdx
+  idiv rbx
+  mov rcx,rax
+  rep movsq
+	pop rdx
+	pop rbx
+	mov rsp,rbp
+  pop rbp
+  mov rax,0x0
+  ret
