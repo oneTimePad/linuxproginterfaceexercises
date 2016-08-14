@@ -42,7 +42,6 @@ main(int argc, char *argv[]){
     exit(1);
   }
 
-
   sigpending(&pending);
   if(sigismember(&pending,sig)==0){
     fprintf(stderr,"%s\n","invalid signal, not pending");
