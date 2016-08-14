@@ -13,7 +13,7 @@ void int_handler(int sig){
   if(!handler_execute){
     handler_execute = 1;
     printf("send again\n"); //just all bad
-    kill(getpid(),SIGINT); //very very very ... bad
+    kill(getpid(),SIGINT); //allowed
 
   }
 
