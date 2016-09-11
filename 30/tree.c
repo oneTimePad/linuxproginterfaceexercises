@@ -38,6 +38,12 @@ static bool add_node(struct tree_type *parent,char *key, char *value,which way){
 	return TRUE;
 }
 
+/**
+ * add node to tree
+ * @root: root node of the tree
+ * @key: key for new node
+ * @value: value for new node
+ **/
 bool add(struct tree_type *root,char *key, void *value){
 	if(root == NULL || key == NULL || value == NULL){
 		errno = EINVAL;
@@ -112,6 +118,47 @@ bool add(struct tree_type *root,char *key, void *value){
 
 
 
+}
+
+bool delete(struct tree_type *root, char *key, void *value){
+
+}
+bool lookup(struct tree_type *root, char *key){
+	if(root == NULL || key == NULL){
+		errno = EINVAL;
+		return FALSE;
+	}
+
+	struct tree_type *node = root;
+	int cmp_res = 0;
+	while(node!=NULL){
+		if(pthread_mutex_lock(&node->lock) !=0)
+			return FALSE;
+		if((cmp_res=strcmp(node->tr_data.key,key)) > 0){
+			struct tree_type *tmp = node->left;
+			if(pthread_mutex_unlock(&node->lock)!=0)
+				return FALSE;
+			node = tmp;
+			if(pthread_mutex_lock(&node->lock) !=0)
+				return FALSE;
+
+		}
+		else if(cmp_res < 0 ){
+			struct tree_type *tmp = node->right;
+			if(pthread_mutex_unlock(&node->lock) != 0)
+				return FALSE;
+			node = tmp;
+			if(pthread_mutex_lock(&node->lock) != 0)
+				return FALSE;
+		}
+		else{
+			if(pthread_mutex_unock(&node->lock) != 0)
+				return FALSE;
+			return TRUE;
+		}
+	}
+
+	return FALSE
 }
 
 
