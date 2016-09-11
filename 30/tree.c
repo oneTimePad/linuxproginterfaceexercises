@@ -120,7 +120,69 @@ bool add(struct tree_type *root,char *key, void *value){
 
 }
 
+tree_type *lowest_right_child(tree_type *node){
+	struct tree_type *start = node->right;
+	if(start == NULL) return node;
+	if(pthread_mutex_lock(&start->lock) != 0)
+		return FALSE;
+	while(start->left != NULL){
+		struct tree_type *tmp = start;
+		start = start->left;
+		if(pthread_mutex_lock(&start->lock) != 0)
+			return FALSE;
+		if(pthread_mutex_unlock(&tmp->lock) != 0)
+			return FALSE;
+	}
+	return start; //keep start locked
+
+}
+
+
 bool delete(struct tree_type *root, char *key, void *value){
+	
+	if(root == NULL || key == NULL){
+		errno = EINVAL;
+		return FALSE;
+	}
+	struct tree_type *node = root;
+	struct tree_type *parent = NULL;
+	int cmp_res = 0;
+	while(node!= NULL){
+		if(pthread_mutex_lock(&node->lock) != 0)
+			return FALSE;
+		if((cmp_res = strcmp(node->key,key)) < 0 ){
+			if(parent!= NULL){
+				if(pthread_mutex_unlock(&parent->lock) != 0)
+					return FALSE;
+			}
+			parent = node;
+			node = node->left;
+		
+		}
+		else if(cmp_res > 0 ){
+			if(parent != NULL){
+				if(pthread_mutex_unlock(&parent->lock) != 0)
+					return FALSE;
+			}
+			parent = node;
+			node  = node->right;
+		
+		}
+		else{
+			if(node->left != NULL && node->right!= NULL){
+				struct tree_type *replace = lowest_right_child(node);
+				if(parent->left == node){
+					parent->left = replace;
+					
+
+				}
+			}
+		}
+	}
+
+
+
+
 
 }
 bool lookup(struct tree_type *root, char *key){
