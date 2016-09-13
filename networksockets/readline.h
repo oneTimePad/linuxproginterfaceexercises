@@ -5,11 +5,9 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-
+#include "bool.h"
 #define BUFFER_SIZE 2048
-#ifndef bool
-typedef enum {FALSE, TRUE} bool;
-#endif
+
 
 struct rl_type {
 	char rl_buffer_p[BUFFER_SIZE];//buffer of data read
