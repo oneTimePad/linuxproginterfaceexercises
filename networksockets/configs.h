@@ -12,15 +12,17 @@
 #define MAX_SERV_ARGS 10
 #define MAX_SERV_PROT 10
 #define MAX_SERV_FLAG 10
+#define MAX_SERV_TYPE 10
 
 #define LINE_SIZE     4096
 
+typedef enum {SOCK_TCP, SOCK_UDP} protocol;
 typedef enum {INVALID,NOWAIT, WAIT} inet_flags;
 
 struct service_type{
 	char serv_name[MAX_SERV_NAME+1];
-	long serv_sock_typ;
-	long serv_protocol;
+	long serv_sock_type;
+	protocol serv_protocol;
 	inet_flags serv_flag;
 	char serv_prog[MAX_SERV_NAME];
 	char serv_args[MAX_SERV_ARGS][ARG_MAX];

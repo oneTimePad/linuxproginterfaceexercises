@@ -22,37 +22,50 @@ static bool parseConfig(char *line, struct service_type *serv){
    				case 0:{
    					if(line-start+1 >MAX_SERV_NAME)
    						return FALSE;
-   					strncpy(serv->serv_name,start,line-start+1);
-   					serv->serv_name[line-start+1] = '\0';
+   					strncpy(serv->serv_name,start,line-start);
+   					serv->serv_name[line-start] = '\0';
    					break;
    				}
-   				case 1:{
-   					if(line-start+1 >  MAX_SERV_PROT)
+				case 1:{
+					if(line-start+1 >  MAX_SERV_TYPE)
+   						return FALSE;
+   					char tmp_type[MAX_SERV_TYPE+1];
+   					strncpy(tmp_type,start,line-start);
+   					tmp_type[line-start] = '\0';
+   					serv->serv_sock_type = (strcmp(tmp_type,"stream")==0)? SOCK_STREAM : ((strcmp(tmp_type,"dgram")==0) ? SOCK_DGRAM : -1);
+   					if(serv->serv_sock_type == -1)
+   						return FALSE;	
+   					break;
+				       }
+   				case 2:{
+
+					if(line-start+1 >  MAX_SERV_PROT)
    						return FALSE;
    					char tmp_prot[MAX_SERV_PROT+1];
-   					strncpy(tmp_prot,start,line-start+1);
-   					tmp_prot[line-start+1] = '\0';
-   					serv->serv_protocol = (strcmp(tmp_prot,"stream")==0)? SOCK_STREAM : ((strcmp(tmp_prot,"dgram")==0) ? SOCK_DGRAM : -1);
+   					strncpy(tmp_prot,start,line-start);
+   					tmp_prot[line-start] = '\0';
+   					serv->serv_protocol = (strcmp(tmp_prot,"tcp")==0)? SOCK_TCP : ((strcmp(tmp_prot,"dgram")==0) ? SOCK_UDP : -1);
    					if(serv->serv_protocol == -1)
    						return FALSE;	
    					break;
-   				}
-   				case 2:{
+				       
+				}
+   				case 3:{
    					if(line-start+1 >MAX_SERV_FLAG)
    						return FALSE;
    					char tmp_flag[MAX_SERV_FLAG+1];
-   					strncpy(tmp_flag,start,line-start+1);
-   					tmp_flag[line-start+1] = '\0';
+   					strncpy(tmp_flag,start,line-start);
+   					tmp_flag[line-start] = '\0';
    					serv->serv_flag = (strcmp(tmp_flag,"wait")==0) ? WAIT : ((strcmp(tmp_flag,"nowait") ==0) ? WAIT : -INVALID);
    					if(serv->serv_flag == INVALID)
    						return FALSE;			
    					break;
    				}
-   				case 3:{
+   				case 4:{
    					if(line-start+1 > MAX_SERV_NAME)
    						return FALSE;
-   					strncpy(serv->serv_name,start, line-start+1);
-   					serv->serv_name[line-start+1] = '\0';
+   					strncpy(serv->serv_name,start, line-start);
+   					serv->serv_name[line-start] = '\0';
    					break;
    				}
    				default:{
@@ -60,8 +73,8 @@ static bool parseConfig(char *line, struct service_type *serv){
    						return FALSE;
    					if(serv->num_args +1 > MAX_SERV_ARGS)
    						return FALSE;
-   					strncpy(serv->serv_args[++serv->num_args],line,line-start+1);
-   					serv->serv_args[serv->num_args][line-start+1] = '\0';
+   					strncpy(serv->serv_args[++serv->num_args],line,line-start);
+   					serv->serv_args[serv->num_args][line-start] = '\0';
    					break;
    				}
    			}
