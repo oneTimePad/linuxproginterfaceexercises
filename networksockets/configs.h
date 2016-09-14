@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 #include "bool.h"
+#include "readline.h"
 #ifndef ARG_MAX
 #define ARG_MAX 1024
 #endif
@@ -16,7 +17,7 @@
 
 typedef enum {INVALID,NOWAIT, WAIT} inet_flags;
 
-struct service{
+struct service_type{
 	char serv_name[MAX_SERV_NAME+1];
 	long serv_sock_typ;
 	long serv_protocol;
@@ -25,7 +26,7 @@ struct service{
 	char serv_args[MAX_SERV_ARGS][ARG_MAX];
 	int num_args;
 };
-
-
-
+		
+bool readConfigInit(char *, struct rl_type *);
+bool readConfig(struct rl_type *,struct service_type *,size_t,int*);
 #endif

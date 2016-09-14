@@ -23,7 +23,7 @@ ssize_t readLineBuf(struct rl_type *rl_p,char *line, size_t line_size){
 	int num_chars = 0;
 	while(*(rl_p -> rl_buffer_p+rl_p->rl_ind_i) !='\n' && count < line_size-1){
 		if(rl_p -> rl_ind_i == rl_p -> rl_buf_size_st){
-			memcpy(line,start,num_chars);
+			strncpy(line,start,num_chars);
 			line[count] = '\0';
 			num_chars = 0;
 			line = line+count;
@@ -31,6 +31,9 @@ ssize_t readLineBuf(struct rl_type *rl_p,char *line, size_t line_size){
 			ssize_t in;
 			switch((in=read(rl_p->rl_fd_i,rl_p->rl_buffer_p,BUFFER_SIZE))){
 				case -1:{
+					if(errno = EINTR){
+						return -2;
+					}
 					return -1;
 					break;
 				}
