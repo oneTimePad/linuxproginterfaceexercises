@@ -24,7 +24,7 @@ struct service_type{
 	long serv_sock_type;
 	protocol serv_protocol;
 	inet_flags serv_flag;
-	char serv_prog[MAX_SERV_NAME];
+	char serv_prog[MAX_SERV_NAME+1];
 	char serv_args[MAX_SERV_ARGS][ARG_MAX];
 	int num_args;
 };

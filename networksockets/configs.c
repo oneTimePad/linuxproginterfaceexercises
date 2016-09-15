@@ -12,9 +12,11 @@ static bool parseConfig(char *line, struct service_type *serv){
    	memset(serv,0,sizeof(struct service_type));
    	int order = 0;
    	char *start = line;
-   	while(*line!='\0'){
-   		if(*line != ' '){
-   			start =(start ==NULL) ? line : start;
+	bool end = FALSE;
+   	while(TRUE){
+		if(*line != ' ' && *line !='\0'){
+   			start = (start == NULL) ? line : start;
+		
    			line++;
    		}
    		else{
@@ -64,8 +66,8 @@ static bool parseConfig(char *line, struct service_type *serv){
    				case 4:{
    					if(line-start+1 > MAX_SERV_NAME)
    						return FALSE;
-   					strncpy(serv->serv_name,start, line-start);
-   					serv->serv_name[line-start] = '\0';
+   					strncpy(serv->serv_prog,start, line-start);
+   					serv->serv_prog[line-start] = '\0';
    					break;
    				}
    				default:{
@@ -73,13 +75,16 @@ static bool parseConfig(char *line, struct service_type *serv){
    						return FALSE;
    					if(serv->num_args +1 > MAX_SERV_ARGS)
    						return FALSE;
-   					strncpy(serv->serv_args[++serv->num_args],line,line-start);
+   					strncpy(serv->serv_args[serv->num_args],start,line-start);
    					serv->serv_args[serv->num_args][line-start] = '\0';
+					serv->num_args++;
    					break;
    				}
    			}
+			if(*line == '\0')
+				break;
    			start =NULL;
-   			line++;
+			line++;
    		}
    
    	}
