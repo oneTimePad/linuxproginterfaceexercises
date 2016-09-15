@@ -46,7 +46,7 @@ static bool parseConfig(char *line, struct service_type *serv){
    					char tmp_prot[MAX_SERV_PROT+1];
    					strncpy(tmp_prot,start,line-start);
    					tmp_prot[line-start] = '\0';
-   					serv->serv_protocol = (strcmp(tmp_prot,"tcp")==0)? SOCK_TCP : ((strcmp(tmp_prot,"dgram")==0) ? SOCK_UDP : -1);
+   					serv->serv_protocol = (strcmp(tmp_prot,"tcp")==0)? SOCK_TCP : ((strcmp(tmp_prot,"udp")==0) ? SOCK_UDP : -1);
    					if(serv->serv_protocol == -1)
    						return FALSE;	
    					break;
@@ -58,7 +58,7 @@ static bool parseConfig(char *line, struct service_type *serv){
    					char tmp_flag[MAX_SERV_FLAG+1];
    					strncpy(tmp_flag,start,line-start);
    					tmp_flag[line-start] = '\0';
-   					serv->serv_flag = (strcmp(tmp_flag,"wait")==0) ? WAIT : ((strcmp(tmp_flag,"nowait") ==0) ? WAIT : -INVALID);
+   					serv->serv_flag = (strcmp(tmp_flag,"wait")==0) ? WAIT : ((strcmp(tmp_flag,"nowait") ==0) ? NOWAIT : -INVALID);
    					if(serv->serv_flag == INVALID)
    						return FALSE;			
    					break;
