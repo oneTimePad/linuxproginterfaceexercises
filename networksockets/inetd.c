@@ -1,4 +1,7 @@
-  
+#include "configs.h"
+#include "errors.h"
+
+
 
 volatile sig_atomic_t hup_received = 0;
 void hup_handler(int sig){
@@ -23,6 +26,16 @@ int main(int argc,char *argv[]){
 		errExit("daemonize");
 
 	openlog(LOG_IDENF,0,LOG_USER);
-	readConfig(CONFIG_FILE);
+	struct rl_type rl; //handle for reading lines, see readline.h
+	if(!readConfigInit(CONFIG_FILE,&rl))
+		errnoExit("readConfigInit");
+
+	size_t num_services = INIT_SERVICE_ARRAY_SIZE;
+	struct service_type *servs = (struct service_type *)malloc(sizeof(struct service_type) *(size+=INIT_ARRAY_SMALL_INC));
+	if(servs == NULL)
+		errnoExit("malloc");
+
+	if(!readConfig(&rl))
+		errnoExit("readConfig");
 
 }
